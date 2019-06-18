@@ -1,0 +1,57 @@
+
+---------------------
+Это - параметризованная сборка
+  String Parameter
+    Имя - GIT_USER
+    Значение по-умолчанию - denysord88
+    Описание - The GitHub user whose repository will be cloned.
+  String Parameter
+    Имя - GIT_BRANCH
+    Значение по-умолчанию - master
+    Описание - The GitHub branch to checkout.
+  Boolean Parameter
+    Имя - WEB_UI_FUNCTIONAL
+    Значение по-умолчанию - true
+ 	  Описание - Check it to include functional WebUI tests to the test run.
+  Boolean Parameter
+    Имя - WEB_UI_SECURITY
+    Значение по-умолчанию - false
+ 	  Описание - Check it to include security WebUI tests to the test run (requires Drill with authentication).
+  Boolean Parameter
+ 	  Имя - REST_API_FUNCTIONAL
+ 	  Значение по-умолчанию - false
+    Описание - Check it to include functional REST API tests to the test run (requires Drill without authentication).
+  Boolean Parameter
+ 	  Имя - REST_API_SECURITY
+ 	  Значение по-умолчанию - false
+ 	  Описание - Check it to include security REST API tests to the test run (requires Drill with authentication).
+  String Parameter
+ 	  Имя - MVN_ARGUMENTS
+    Значение по-умолчанию - -DDRIVER_TYPE=FIREFOX -DDEFAULT_TIMEOUT=15
+    Описание - Maven arguments to the Framework, separated by spaces.
+  String Parameter
+ 	  Имя - Email
+    Значение по-умолчанию - dordynskiy@mapr.com
+    Описание - Add your email address for a notification.
+    Trim the string - true
+---------------------
+Разрешить параллельный запуск задачи - true
+Ограничить лейблы сборщиков, которые могут исполнять данную задачу - true
+  Label Expression - 10.234.238.57
+Управление исходным кодом - Нет
+---------------------
+Сборка
+Выполнить команду shell
+  Команда	
+    echo -e "mapr" | su - mapr -c "/home/mapr/drillAutomation/scripts/web_framework_jenkins/stop_selenoid.sh"
+    echo -e "mapr" | su - mapr -c "/home/mapr/drillAutomation/scripts/web_framework_jenkins/start_selenoid.sh"
+    echo -e "mapr" | su - mapr -c "/home/mapr/drillAutomation/scripts/web_framework_jenkins/clone_framework.sh $GIT_USER $GIT_BRANCH"
+    echo -e "mapr" | su - mapr -c "/home/mapr/drillAutomation/scripts/web_framework_jenkins/select_web_suites.sh $WEB_UI_FUNCTIONAL $WEB_UI_SECURITY $REST_API_FUNCTIONAL $REST_API_SECURITY $MVN_ARGUMENTS"
+    echo -e "mapr" | su - mapr -c "/home/mapr/drillAutomation/scripts/web_framework_jenkins/stop_selenoid.sh"
+---------------------
+Послесборочные операции
+  Уведомление по почте
+    Получатели - $Email
+    Отправлять уведомления о нестабильных сборках	
+    Отправлять уведомления разработчикам, чьи изменения вызвали поломку.
+---------------------
