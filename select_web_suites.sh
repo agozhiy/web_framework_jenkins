@@ -32,4 +32,13 @@ then
   TEST_SUITES=${TEST_SUITES:1}
 fi
 
-/home/mapr/drillAutomation/scripts/web_framework_jenkins/run_tests.sh "$TEST_SUITES" $5
+if [ $5 = 'ALL' ]
+then
+  echo "!!! Running tests on the CHROME browser"
+  /home/mapr/drillAutomation/scripts/web_framework_jenkins/run_tests.sh "$TEST_SUITES" -DDRIVER_TYPE=CHROME $6
+  echo "!!! Running tests on the FIREFOX browser"
+  /home/mapr/drillAutomation/scripts/web_framework_jenkins/run_tests.sh "$TEST_SUITES" -DDRIVER_TYPE=FIREFOX $6
+else
+  echo "!!! Running tests on the $5 browser"
+  /home/mapr/drillAutomation/scripts/web_framework_jenkins/run_tests.sh "$TEST_SUITES" -DDRIVER_TYPE=$5 $6
+fi
